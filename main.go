@@ -28,7 +28,6 @@ func run() error {
 	ctx, cancel := context.WithCancel(ctx)
 	defer cancel()
 
-	var conn net.Conn
 	conn, err := DialWithContext("tcp", addr, ctx)
 	if err != nil {
 		defer cancel()
@@ -37,7 +36,6 @@ func run() error {
 
 	go func() {
 		<-time.After(1 * time.Second)
-		fmt.Println("cancelled")
 		cancel()
 	}()
 
@@ -56,11 +54,10 @@ func DialWithContext(network, address string, ctx context.Context) (net.Conn, er
 		return nil, err
 	}
 
-	// ctxで親がキャンセルを呼ばれたら発火する
 	context.AfterFunc(ctx, func() {
-		fmt.Println("closing")
 		conn.Close()
-		// conn.SetDeadline(time.Now()) // こっちはコネクションを閉じないけどI/Oが止まる
+		// conn.SetDeadline(time.Now()) // I/Oはキャンセルされるがコネクションを閉じない
 	})
+
 	return conn, nil
 }
