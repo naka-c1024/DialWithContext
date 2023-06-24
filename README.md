@@ -11,6 +11,7 @@
 2023年6月現在最新の Go1.21 で導入された`context.AfterFunc`関数を使用して、キャンセルが発生したら接続を閉じるという実装を行った。
 
 [Go1.21 Release Notes](https://tip.golang.org/doc/go1.21)
+
 [AfterFunc](https://pkg.go.dev/context@master#AfterFunc)
 
 初期の実装方針では、`net.Conn`型の`SetDeadline`メソッドを使用して読み書きをキャンセルする方針だったが、
